@@ -161,7 +161,7 @@ Transcript:
 """
 
             try:
-                # Try Gemini 1.5-flash first (or fallback)
+                # Try Gemini 2.5-flash first (or fallback)
                 try:
                     model = genai.GenerativeModel("gemini-2.5-flash")
                     response = model.generate_content(prompt)
@@ -176,12 +176,46 @@ Transcript:
                 st.error(f"❌ Error generating summary: {str(e)}")
                 st.stop()
 
-        # ==================== DISPLAY SUMMARY ====================
-        st.markdown("# ✅ Meeting Summary Report")
-        # Clean unwanted asterisks
-        #clean_text = re.sub(r'\*{1,2}', '', response.text)   # removes * and ** from bold markdown
-        #st.markdown(clean_text)
-        st.markdown("<div class='summary-box'>" + summary.replace("\n", "<br>") + "</div>", unsafe_allow_html=True)
+   # ==================== DISPLAY SUMMARY ====================
+        st.markdown("<h2 style='color:#1E3A8A;'>✅ Meeting Summary Report</h2>", unsafe_allow_html=True)
+        st.markdown("<p style='font-size:16px;color:#333;'>Here's an analysis of your team meeting:</p>", unsafe_allow_html=True)
+
+        # --- Clean up Markdown formatting ---
+        clean_text = summary
+
+        # Remove **bold markers**
+        clean_text = re.sub(r"\*{2}(.*?)\*{2}", r"\1", clean_text)
+        clean_text = re.sub(r"^\*\s*", "", clean_text, flags=re.MULTILINE)
+
+        # Replace section headers (###, ## etc.) with stylized titles
+        clean_text = re.sub(
+            r"^#+\s*(.*?)$",
+            r"<h4 style='color:#1E3A8A; margin-top:20px; margin-bottom:5px;'>\1</h4>",
+            clean_text,
+            flags=re.MULTILINE
+        )
+
+        # Convert line breaks
+        clean_text = clean_text.replace("\n", "<br>")
+
+        # Wrap content in styled summary box
+        st.markdown(f"""
+        <div style="
+            background-color:#fff;
+            border-radius:15px;
+            padding:20px 25px;
+            margin-top:10px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.1);
+            font-size:16px;
+            line-height:1.6;
+            color:#1E3A8A;
+        ">
+            {clean_text}
+        </div>
+        """, unsafe_allow_html=True)
 
         st.success("✨ Summary successfully generated!")
+
+
+
 
