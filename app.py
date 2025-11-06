@@ -116,7 +116,7 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 # ==================== INPUT AREA ====================
-st.subheader("🗂️ Input Section")
+#st.subheader("🗂️ Input Section")
 
 input_method = st.radio("Choose Input Method:", ["Paste Transcript", "Upload Text File"])
 
@@ -215,6 +215,7 @@ Transcript:
         """, unsafe_allow_html=True)
 
         st.success("✨ Summary successfully generated!")
+
 
 
 
